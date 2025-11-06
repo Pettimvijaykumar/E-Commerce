@@ -28,7 +28,7 @@ const UserProfile = () => {
   useEffect(() => {
     if (token) {
       axios
-        .get("https://e-commerce-snapcart.onrender.com/getuser", {
+        .get("http://localhost:2005/getuser", {
           headers: { "auth-token": token },
         })
         .then((res) => {
@@ -48,7 +48,7 @@ const UserProfile = () => {
   // ✅ Save profile changes
   const handleSaveProfile = async () => {
     try {
-      const res = await fetch("https://e-commerce-snapcart.onrender.com/updateuser", {
+      const res = await fetch("http://localhost:2005/updateuser", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -76,7 +76,7 @@ const UserProfile = () => {
   useEffect(() => {
     if (token) {
       axios
-        .get("https://e-commerce-snapcart.onrender.com/orders/me", {
+        .get("http://localhost:2005/orders/me", {
           headers: { "auth-token": token },
         })
         .then((res) => {
@@ -89,7 +89,7 @@ const UserProfile = () => {
   // Fetch addresses (wrapped in useCallback to satisfy ESLint)
   const fetchAddresses = useCallback(async () => {
     try {
-      const res = await fetch("https://e-commerce-snapcart.onrender.com/address/list", {
+      const res = await fetch("http://localhost:2005/address/list", {
         headers: { "auth-token": token },
       });
       const data = await res.json();
@@ -107,8 +107,8 @@ const UserProfile = () => {
   const handleSaveAddress = async (address) => {
     try {
       const url = editingAddress
-        ? `https://e-commerce-snapcart.onrender.com/address/update/${editingAddress._id}`
-        : `https://e-commerce-snapcart.onrender.com/address/add`;
+        ? `http://localhost:2005/address/update/${editingAddress._id}`
+        : `http://localhost:2005/address/add`;
       const method = editingAddress ? "PUT" : "POST";
 
       const res = await fetch(url, {
@@ -135,7 +135,7 @@ const UserProfile = () => {
   const handleDeleteAddress = async (id) => {
     try {
       const res = await fetch(
-        `https://e-commerce-snapcart.onrender.com/address/delete/${id}`,
+        `http://localhost:2005/address/delete/${id}`,
         {
           method: "DELETE",
           headers: { "auth-token": token },

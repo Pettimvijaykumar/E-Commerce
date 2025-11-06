@@ -23,7 +23,7 @@ const OrderSummary = ({ subtotal, total, promoDiscount, setPromoDiscount }) => {
 
     setLoading(true);
     try {
-      const res = await fetch("https://e-commerce-snapcart.onrender.com/apply-promo", {
+      const res = await fetch("http://localhost:2005/apply-promo", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code: promoCode }),

@@ -50,7 +50,7 @@ const AddProduct = () => {
       if (image) {
         const formData = new FormData();
         formData.append("product", image);
-        let uploadRes = await fetch("https://e-commerce-snapcart.onrender.com/upload", { method: "POST", body: formData });
+        let uploadRes = await fetch("http://localhost:2005/upload", { method: "POST", body: formData });
         let uploadData = await uploadRes.json();
         if (uploadData.success) product.image = uploadData.image_url;
         else { alert("❌ Image upload failed!"); return; }
@@ -61,7 +61,7 @@ const AddProduct = () => {
       if (thumbnails.length > 0) {
         const formData = new FormData();
         thumbnails.forEach((file) => formData.append("product", file));
-        const uploadRes = await fetch("https://e-commerce-snapcart.onrender.com/upload", { method: "POST", body: formData });
+        const uploadRes = await fetch("http://localhost:2005/upload", { method: "POST", body: formData });
         const uploadData = await uploadRes.json();
         if (uploadData.success) uploadedThumbnails = uploadData.image_url ? [uploadData.image_url] : [];
         else { alert("❌ Thumbnail upload failed!"); return; }
@@ -75,7 +75,7 @@ const AddProduct = () => {
       };
 
       // Save product
-      const res = await fetch("https://e-commerce-snapcart.onrender.com/addproduct", {
+      const res = await fetch("http://localhost:2005/addproduct", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(product),

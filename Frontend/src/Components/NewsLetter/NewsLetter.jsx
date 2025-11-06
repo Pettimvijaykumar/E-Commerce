@@ -10,7 +10,7 @@ const NewsLetter = () => {
     if (!email) return setMessage('Please enter your email');
 
     try {
-      const res = await axios.post('https://e-commerce-snapcart.onrender.com/newsletter/subscribe', { email });
+      const res = await axios.post('http://localhost:2005/newsletter/subscribe', { email });
       if (res.data.success) {
         setMessage(res.data.message);
         setEmail('');

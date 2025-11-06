@@ -23,7 +23,7 @@ const LoginSignup = () => {
     try {
       if (isSignup) {
         // 🔹 Signup API
-        const res = await axios.post("https://e-commerce-snapcart.onrender.com/signup", {
+        const res = await axios.post("http://localhost:2005/signup", {
           username: formData.username,
           email: formData.email,
           password: formData.password,
@@ -36,7 +36,7 @@ const LoginSignup = () => {
         navigate("/");
       } else {
         // 🔹 Login API
-        const res = await axios.post("https://e-commerce-snapcart.onrender.com/login", {
+        const res = await axios.post("http://localhost:2005/login", {
           email: formData.email,
           password: formData.password,
         });

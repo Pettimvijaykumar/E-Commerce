@@ -12,7 +12,7 @@ const Orders = () => {
   }, []);
 
   const fetchOrders = async () => {
-    const res = await axios.get("https://e-commerce-snapcart.onrender.com/orders/all");
+    const res = await axios.get("http://localhost:2005/orders/all");
     if (res.data.success) setOrders(res.data.orders);
   };
 
@@ -22,7 +22,7 @@ const Orders = () => {
   };
 
   const updateStatus = async () => {
-    await axios.put(`https://e-commerce-snapcart.onrender.com/orders/update-status/${selectedOrder._id}`, { status });
+    await axios.put(`http://localhost:2005/orders/update-status/${selectedOrder._id}`, { status });
     fetchOrders();
     setSelectedOrder(null);
   };

@@ -7,7 +7,7 @@ const NewCollections = () => {
 
   // fetch data from backend
   useEffect(() => {
-    fetch("https://e-commerce-snapcart.onrender.com/newcollections")
+    fetch("http://localhost:2005/newcollections")
       .then((res) => res.json())
       .then((data) => setNewCollection(data))
       .catch((err) => console.error("Error fetching new collections:", err));

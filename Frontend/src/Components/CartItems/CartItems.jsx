@@ -16,7 +16,7 @@ const CartItems = () => {
   useEffect(() => {
     const fetchPromos = async () => {
       try {
-        const res = await fetch("https://e-commerce-snapcart.onrender.com/get-promos");
+        const res = await fetch("http://localhost:2005/get-promos");
         const data = await res.json();
         setPromoCodes(data || []);
       } catch (error) {
@@ -34,7 +34,7 @@ const CartItems = () => {
 
     setLoading(true);
     try {
-      const response = await fetch("https://e-commerce-snapcart.onrender.com/apply-promo", {
+      const response = await fetch("http://localhost:2005/apply-promo", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ code: promoCode.trim().toUpperCase() }),

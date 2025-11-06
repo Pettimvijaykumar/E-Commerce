@@ -17,7 +17,7 @@ const Navbar = () => {
 
   const fetchUserAndCart = useCallback(async (token) => { // ✅ wrap in useCallback
     try {
-      const res = await fetch("https://e-commerce-snapcart.onrender.com/getuser", {
+      const res = await fetch("http://localhost:2005/getuser", {
         headers: { "auth-token": token },
       });
       const data = await res.json();
@@ -27,7 +27,7 @@ const Navbar = () => {
     }
 
     try {
-      const res = await fetch("https://e-commerce-snapcart.onrender.com/getcart", {
+      const res = await fetch("http://localhost:2005/getcart", {
         method: "POST",
         headers: { "Content-Type": "application/json", "auth-token": token },
       });

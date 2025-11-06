@@ -12,9 +12,9 @@ const Popular = () => {
     const fetchData = async () => {
       try {
         const [resWomen, resMen, resKids] = await Promise.all([
-          fetch("https://e-commerce-snapcart.onrender.com/popularinwomen"),
-          fetch("https://e-commerce-snapcart.onrender.com/popularinmen"),
-          fetch("https://e-commerce-snapcart.onrender.com/popularinkids"),
+          fetch("http://localhost:2005/popularinwomen"),
+          fetch("http://localhost:2005/popularinmen"),
+          fetch("http://localhost:2005/popularinkids"),
         ]);
 
         const womenData = await resWomen.json();

@@ -19,7 +19,7 @@ const DescriptionBox = ({ productId }) => {
       if (!token) return;
 
       try {
-        const res = await axios.get("https://e-commerce-snapcart.onrender.com/getuser", {
+        const res = await axios.get("http://localhost:2005/getuser", {
           headers: { "auth-token": token },
         });
         setUser(res.data);
@@ -40,7 +40,7 @@ const DescriptionBox = ({ productId }) => {
       setLoading(true);
       try {
         const res = await axios.get(
-          `https://e-commerce-snapcart.onrender.com/product/${Number(productId)}/reviews`
+          `http://localhost:2005/product/${Number(productId)}/reviews`
         );
         if (res.data.success) {
           setReviews(res.data.reviews || []);
@@ -67,7 +67,7 @@ const DescriptionBox = ({ productId }) => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post(
-        `https://e-commerce-snapcart.onrender.com/product/${Number(productId)}/review`,
+        `http://localhost:2005/product/${Number(productId)}/review`,
         { rating: newRating, comment: newReview },
         { headers: { "auth-token": token } }
       );

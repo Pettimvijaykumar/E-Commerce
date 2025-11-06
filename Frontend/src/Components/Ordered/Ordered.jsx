@@ -9,7 +9,7 @@ const Ordered = () => {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const res = await fetch(`https://e-commerce-snapcart.onrender.com/order/${orderId}`, {
+        const res = await fetch(`http://localhost:2005/order/${orderId}`, {
           headers: { "auth-token": localStorage.getItem("token") || "" },
         });
         const data = await res.json();

@@ -13,7 +13,7 @@ const NewsLetter = () => {
   useEffect(() => {
     const fetchSubscribers = async () => {
       try {
-        const res = await axios.get("https://e-commerce-snapcart.onrender.com/newsletter/subscribers");
+        const res = await axios.get("http://localhost:2005/newsletter/subscribers");
         if (res.data.success) setSubscribers(res.data.subscribers);
       } catch (err) {
         console.error("Error fetching subscribers:", err);
@@ -35,7 +35,7 @@ const NewsLetter = () => {
     setMessage("");
 
     try {
-      const res = await axios.post("https://e-commerce-snapcart.onrender.com/newsletter/send", { subject, content });
+      const res = await axios.post("http://localhost:2005/newsletter/send", { subject, content });
       setMessage(res.data.message || "✅ Newsletter sent successfully!");
       setSubject("");
       setContent("");

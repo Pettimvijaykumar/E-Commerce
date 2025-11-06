@@ -11,7 +11,7 @@ const ShopContextProvider = (props) => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axios.get("https://e-commerce-snapcart.onrender.com/allproducts");
+        const res = await axios.get("http://localhost:2005/allproducts");
         setAll_Products(res.data);
       } catch (err) {
         console.error("Error fetching products:", err);
@@ -27,7 +27,7 @@ const ShopContextProvider = (props) => {
       if (token) {
         try {
           const res = await axios.post(
-            "https://e-commerce-snapcart.onrender.com/getcart",
+            "http://localhost:2005/getcart",
             {},
             { headers: { "auth-token": token } }
           );
@@ -53,7 +53,7 @@ const ShopContextProvider = (props) => {
 
     try {
       const res = await axios.post(
-        "https://e-commerce-snapcart.onrender.com/cart/add",
+        "http://localhost:2005/cart/add",
         { productId: itemId },
         { headers: { "auth-token": token } }
       );
@@ -84,7 +84,7 @@ const ShopContextProvider = (props) => {
 
     try {
       const res = await axios.post(
-        "https://e-commerce-snapcart.onrender.com/cart/remove",
+        "http://localhost:2005/cart/remove",
         { productId: itemId },
         { headers: { "auth-token": token } }
       );

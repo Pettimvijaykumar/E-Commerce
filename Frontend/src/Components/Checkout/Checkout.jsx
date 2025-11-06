@@ -32,7 +32,7 @@ const Checkout = () => {
         return;
       }
 
-      const res = await fetch(`https://e-commerce-snapcart.onrender.com/address/list`, {
+      const res = await fetch(`http://localhost:2005/address/list`, {
         headers: {
           "auth-token": token,
           "Content-Type": "application/json",
@@ -84,8 +84,8 @@ const Checkout = () => {
       }
 
       const url = editingAddress
-        ? `https://e-commerce-snapcart.onrender.com/address/update/${editingAddress._id}`
-        : `https://e-commerce-snapcart.onrender.com/address/add`;
+        ? `http://localhost:2005/address/update/${editingAddress._id}`
+        : `http://localhost:2005/address/add`;
 
       const method = editingAddress ? "PUT" : "POST";
 
@@ -121,7 +121,7 @@ const Checkout = () => {
         return;
       }
 
-      const res = await fetch(`https://e-commerce-snapcart.onrender.com/address/delete/${id}`, {
+      const res = await fetch(`http://localhost:2005/address/delete/${id}`, {
         method: "DELETE",
         headers: { "auth-token": token },
       });

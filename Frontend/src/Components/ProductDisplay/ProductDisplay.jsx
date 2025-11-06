@@ -14,7 +14,7 @@ const ProductDisplay = ({ product }) => {
 useEffect(() => {
     if (!product?.id) return;
     axios
-      .get(`https://e-commerce-snapcart.onrender.com/product/${product.id}/average-rating`)
+      .get(`http://localhost:2005/product/${product.id}/average-rating`)
       .then((res) => {
         if (res.data.success) {
           setAvgRating(Number(res.data.average));
@@ -42,7 +42,7 @@ useEffect(() => {
 
     try {
       const res = await axios.post(
-        "https://e-commerce-snapcart.onrender.com/cart/add",
+        "http://localhost:2005/cart/add",
         { productId: product.id, size: selectedSize },
         { headers: { "auth-token": token } }
       );
