@@ -5,7 +5,7 @@ import cross_icon from "../../assets/cross_icon.png";
 // ✅ Update product API function
 const updateProduct = async (id, updatedData) => {
   try {
-    let res = await fetch(`http://localhost:2005/updateproduct/${id}`, {
+    let res = await fetch(`https://e-commerce-h9gr.onrender.com/updateproduct/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -33,7 +33,7 @@ const ListProducts = () => {
   // Fetch all products from backend
   const fetchInfo = async () => {
     try {
-      const res = await fetch("http://localhost:2005/allproducts"); 
+      const res = await fetch("https://e-commerce-h9gr.onrender.com/allproducts"); 
       const data = await res.json();
       setAllProducts(data);
     } catch (err) {
@@ -44,7 +44,7 @@ const ListProducts = () => {
   // Delete product handler
   const removeProduct = async (id) => {
     try {
-      await fetch(`http://localhost:2005/removeproduct/${id}`, {
+      await fetch(`https://e-commerce-h9gr.onrender.com/removeproduct/${id}`, {
         method: "DELETE",
       });
       setAllProducts(allProducts.filter((p) => p._id !== id));

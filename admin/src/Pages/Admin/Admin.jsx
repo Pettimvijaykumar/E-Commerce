@@ -9,6 +9,7 @@ import AddProduct from '../../Components/AddProduct/AddProduct';
 import NewsLetter from '../../Components/NewsLetters/NewsLetter';
 import PromoCode from '../../Components/PromoCode/PromoCode';
 import Orders from '../../Components/Orders/Orders';
+import AdminNotification from '../../Components/AdminNotification/AdminNotification';
 
 const Admin = () => {
   return (
@@ -24,6 +25,7 @@ const Admin = () => {
           <Route path="/newsletters" element={<NewsLetter/>} />
           <Route path="/promocode" element={<PromoCode/>} />
           <Route path="/orders" element={<Orders/>}/>
+          <Route path="/notification" element={<AdminNotification/>}/>
           {/* Default welcome page */}
           <Route
             path="/"

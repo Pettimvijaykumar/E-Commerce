@@ -934,7 +934,135 @@ app.get("/product/:id/average-rating", async (req, res) => {
     res.status(500).json({ success: false, message: "Server error" });
   }
 });
+const notificationSchema = new mongoose.Schema(
+  {
+    message: { type: String, required: true },
+    createdAt: { type: Date, default: Date.now },
+  },
+  { timestamps: true }
+);
+const Notification = mongoose.model("Notification", notificationSchema);
 
+
+const userNotificationSchema = new mongoose.Schema(
+  {
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    notificationId: { type: mongoose.Schema.Types.ObjectId, ref: "Notification", required: true },
+    isRead: { type: Boolean, default: false },
+  },
+  { timestamps: true }
+);
+const UserNotification = mongoose.model("UserNotification", userNotificationSchema);
+
+// Create and send notification to all users
+// GET Notifications (no login required)
+app.get("/api/admin/notifications", async (req, res) => {
+  try {
+    const notifications = await Notification.find().sort({ createdAt: -1 });
+    res.json(notifications);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch notifications" });
+  }
+});
+
+// POST Send Notification to all users (no login required)
+app.post("/api/admin/notifications", async (req, res) => {
+  try {
+    const { message } = req.body;
+    if (!message) return res.status(400).json({ error: "Message required" });
+
+    // Prevent spam duplicate messages within 3 seconds
+    const last = await Notification.findOne().sort({ createdAt: -1 });
+    if (last && Date.now() - new Date(last.createdAt).getTime() < 3000) {
+      return res.status(400).json({ error: "Duplicate notification prevented" });
+    }
+
+    const notification = new Notification({ message });
+    await notification.save();
+
+    const users = await User.find();
+    const userNotifs = users.map((u) => ({
+      userId: u._id,
+      notificationId: notification._id,
+    }));
+    await UserNotification.insertMany(userNotifs);
+
+    res.json(notification);
+  } catch (err) {
+    console.error("⚠ Notification Error:", err);
+    res.status(500).json({ error: "Failed to send notification" });
+  }
+});
+
+
+// =============================================
+// 👤 USER NOTIFICATION ROUTES
+// =============================================
+
+// Get user's notifications
+app.get("/api/notifications/:userId", fetchUser, async (req, res) => {
+  try {
+    const { userId } = req.params;
+    if (req.user.id !== userId)
+      return res.status(403).json({ error: "Unauthorized" });
+
+    const userNotifications = await UserNotification.find({ userId })
+      .populate("notificationId", "message createdAt")
+      .sort({ createdAt: -1 });
+
+    const formatted = userNotifications.map((n) => ({
+      id: n._id,
+      message: n.notificationId.message,
+      createdAt: n.notificationId.createdAt,
+      isRead: n.isRead,
+    }));
+
+    res.json(formatted);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch notifications" });
+  }
+});
+
+// Mark all user notifications as read
+// PUT /api/notifications/usernotification/:userNotifId/read
+app.put("/api/notifications/usernotification/:userNotifId/read", fetchUser, async (req, res) => {
+  try {
+    const { userNotifId } = req.params;
+    // ensure the UserNotification belongs to the logged-in user
+    const userNotif = await UserNotification.findById(userNotifId);
+    if (!userNotif) return res.status(404).json({ error: "Not found" });
+    if (userNotif.userId.toString() !== req.user.id)
+      return res.status(403).json({ error: "Unauthorized" });
+
+    // Only update if it is unread
+    if (!userNotif.isRead) {
+      userNotif.isRead = true;
+      await userNotif.save();
+    }
+
+    res.json({ message: "Notification marked read", id: userNotifId });
+  } catch (err) {
+    console.error("Error marking single notification read:", err);
+    res.status(500).json({ error: "Failed to update" });
+  }
+});
+// PUT /api/notifications/:userId/read
+app.put("/api/notifications/:userId/read", fetchUser, async (req, res) => {
+  try {
+    const { userId } = req.params;
+    if (req.user.id !== userId) return res.status(403).json({ error: "Unauthorized" });
+
+    const result = await UserNotification.updateMany(
+      { userId, isRead: false },      // only unread
+      { $set: { isRead: true } }
+    );
+    // result.modifiedCount (or result.nModified depending on driver)
+    res.json({ message: "All notifications marked as read", modifiedCount: result.modifiedCount ?? result.nModified });
+  } catch (err) {
+    console.error("Error marking all read:", err);
+    res.status(500).json({ error: "Failed to update notifications" });
+  }
+});
 
 //___________________________________________________________________________
 // Start

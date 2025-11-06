@@ -43,6 +43,12 @@ const Sidebar = () => {
   <p>Orders</p>
 </div>
 </Link>
+<Link to="notification" style={{textDecoration:"none"}}>
+<div className="sidebar-item">
+  <img src={shopping_icon} alt="" className="sidebar-icon" />
+  <p>Notification</p>
+</div>
+</Link>
     </div>
   );
 };

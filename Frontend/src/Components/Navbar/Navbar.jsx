@@ -1,10 +1,15 @@
-import React, { useContext, useState, useEffect, useCallback } from "react"; // ✅ added useCallback
+import React, { useContext, useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import logo from "../Assets/logo.png";
 import cart_icon from "../Assets/cart_icon.png";
 import { ShopContext } from "../../Context/ShopContext";
 import { Menu, X } from "lucide-react";
+import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBell } from "@fortawesome/free-solid-svg-icons";
+
+const API_BASE = "http://localhost:2005"; // ✅ Update if needed
 
 const Navbar = () => {
   const [menu, setMenu] = useState("shop");
@@ -15,50 +20,107 @@ const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
   const [userName, setUserName] = useState("");
 
-  const fetchUserAndCart = useCallback(async (token) => { // ✅ wrap in useCallback
-    try {
-      const res = await fetch("http://localhost:2005/getuser", {
-        headers: { "auth-token": token },
-      });
-      const data = await res.json();
-      setUserName(data.name || "");
-    } catch (err) {
-      console.error(err);
-    }
+  // ✅ Notification states
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [showDropdown, setShowDropdown] = useState(false);
 
-    try {
-      const res = await fetch("http://localhost:2005/getcart", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", "auth-token": token },
-      });
-      const data = await res.json();
-      setCartItems(data);
-    } catch (err) {
-      console.error(err);
-    }
-  }, [setCartItems]); // ✅ add dependency
+  const fetchUserAndCart = useCallback(
+    async (token) => {
+      try {
+        const res = await fetch(`${API_BASE}/getuser`, {
+          headers: { "auth-token": token },
+        });
+        const data = await res.json();
+        setUserName(data.name || "");
+      } catch (err) {
+        console.error(err);
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/getcart`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "auth-token": token },
+        });
+        const data = await res.json();
+        setCartItems(data);
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    [setCartItems]
+  );
 
   const checkLoginStatus = useCallback(() => {
     const token = localStorage.getItem("token");
     if (token) {
       setIsLoggedIn(true);
       fetchUserAndCart(token);
+      fetchNotifications();
     } else {
       setIsLoggedIn(false);
       setUserName("");
       setCartItems({});
+      setNotifications([]);
+      setUnreadCount(0);
     }
-  }, [fetchUserAndCart, setCartItems]); // ✅ add dependencies
+  }, [fetchUserAndCart, setCartItems]);
 
-  // First load
+  // ✅ Fetch Notifications
+  // ✅ Fetch Notifications for Logged-in User
+const fetchNotifications = async () => {
+  const token = localStorage.getItem("token");
+  if (!token) return;
+
+  try {
+    const userRes = await axios.get(`${API_BASE}/getuser`, {
+      headers: { "auth-token": token },
+    });
+
+    const userId = userRes.data._id; // ✅ Get logged-in user ID
+
+    const notifRes = await axios.get(`${API_BASE}/api/notifications/${userId}`, {
+      headers: { "auth-token": token },
+    });
+
+    setNotifications(notifRes.data);
+    setUnreadCount(notifRes.data.filter((n) => !n.isRead).length);
+
+  } catch (err) {
+    console.error("❌ Error fetching notifications:", err);
+  }
+};
+
+ const handleMarkSingleRead = async (notifId) => {
+  const token = localStorage.getItem("token");
+  if (!token) return;
+
+  try {
+    await axios.put(
+      `${API_BASE}/api/notifications/usernotification/${notifId}/read`,
+      {},
+      { headers: { "auth-token": token } }
+    );
+
+    setNotifications((prev) =>
+      prev.map((n) => (n.id === notifId ? { ...n, isRead: true } : n))
+    );
+    setUnreadCount((prev) => prev - 1);
+
+  } catch (err) {
+    console.error("❌ Error marking notification read:", err);
+  }
+};
+
+
   useEffect(() => {
     checkLoginStatus();
   }, [checkLoginStatus]);
 
-  // Listen for login/logout events
   useEffect(() => {
     window.addEventListener("loginStatusChanged", checkLoginStatus);
-    return () => window.removeEventListener("loginStatusChanged", checkLoginStatus);
+    return () =>
+      window.removeEventListener("loginStatusChanged", checkLoginStatus);
   }, [checkLoginStatus]);
 
   const handleLogout = () => {
@@ -66,6 +128,8 @@ const Navbar = () => {
     setIsLoggedIn(false);
     setUserName("");
     setCartItems({});
+    setNotifications([]);
+    setUnreadCount(0);
     window.dispatchEvent(new Event("loginStatusChanged"));
     navigate("/login");
   };
@@ -110,6 +174,42 @@ const Navbar = () => {
       </ul>
 
       <div className="nav-right">
+
+        {/* 🔔 Notification Bell */}
+        {isLoggedIn && (
+          <div className="notification-wrapper">
+            <FontAwesomeIcon
+              icon={faBell}
+              className="bell-icon"
+              onClick={() => setShowDropdown(!showDropdown)}
+            />
+
+            {unreadCount > 0 && (
+              <span className="notif-count">{unreadCount}</span>
+            )}
+
+            {showDropdown && (
+              <div className="notif-dropdown">
+                <strong>Notifications</strong>
+                {notifications.length > 0 ? (
+                  notifications.map((n) => (
+                    <div
+                      key={n.id}
+                      className={`notif-item ${n.isRead ? "read" : ""}`}
+                      onClick={() => handleMarkSingleRead(n.id)}
+                    >
+                      <p>{n.message}</p>
+                      <small>{new Date(n.createdAt).toLocaleString()}</small>
+                    </div>
+                  ))
+                ) : (
+                  <p className="no-notif">No notifications</p>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
         {isLoggedIn ? (
           <>
             <Link to="/profile">

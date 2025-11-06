@@ -9,7 +9,7 @@ const PromoCode = () => {
 
   const handleSubmit = async () => {
     try {
-      const res = await axios.post("http://localhost:2005/create-promo", {
+      const res = await axios.post("https://e-commerce-h9gr.onrender.com/create-promo", {
         code,
         discount: Number(discount),
         expiry: expiry ? new Date(expiry) : null,
