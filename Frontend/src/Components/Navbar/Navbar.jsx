@@ -9,7 +9,7 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
 
-const API_BASE = "http://localhost:2005"; // ✅ Update if needed
+const API_BASE = "https://e-commerce-h9gr.onrender.com"; // ✅ Update if needed
 
 const Navbar = () => {
   const [menu, setMenu] = useState("shop");

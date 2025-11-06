@@ -28,7 +28,7 @@ const UserProfile = () => {
   useEffect(() => {
     if (token) {
       axios
-        .get("http://localhost:2005/getuser", {
+        .get("https://e-commerce-h9gr.onrender.com/getuser", {
           headers: { "auth-token": token },
         })
         .then((res) => {
@@ -36,7 +36,7 @@ const UserProfile = () => {
           if (!userData.avatar) {
             const seed = encodeURIComponent(userData.name);
             const gender = getGender(userData.name);
-            userData.avatar = `https://api.dicebear.com/9.x/avataaars/svg?seed=${seed}&gender=${gender}`;
+            userData.avatar = `https://e-commerce-h9gr.onrender.com/9.x/avataaars/svg?seed=${seed}&gender=${gender}`;
           }
           setUser(userData);
           setFormData({ name: userData.name, email: userData.email });
@@ -48,7 +48,7 @@ const UserProfile = () => {
   // ✅ Save profile changes
   const handleSaveProfile = async () => {
     try {
-      const res = await fetch("http://localhost:2005/updateuser", {
+      const res = await fetch("https://e-commerce-h9gr.onrender.com/updateuser", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -76,7 +76,7 @@ const UserProfile = () => {
   useEffect(() => {
     if (token) {
       axios
-        .get("http://localhost:2005/orders/me", {
+        .get("https://e-commerce-h9gr.onrender.com/orders/me", {
           headers: { "auth-token": token },
         })
         .then((res) => {
@@ -89,7 +89,7 @@ const UserProfile = () => {
   // Fetch addresses (wrapped in useCallback to satisfy ESLint)
   const fetchAddresses = useCallback(async () => {
     try {
-      const res = await fetch("http://localhost:2005/address/list", {
+      const res = await fetch("https://e-commerce-h9gr.onrender.com/address/list", {
         headers: { "auth-token": token },
       });
       const data = await res.json();
@@ -107,8 +107,8 @@ const UserProfile = () => {
   const handleSaveAddress = async (address) => {
     try {
       const url = editingAddress
-        ? `http://localhost:2005/address/update/${editingAddress._id}`
-        : `http://localhost:2005/address/add`;
+        ? `https://e-commerce-h9gr.onrender.com/address/update/${editingAddress._id}`
+        : `https://e-commerce-h9gr.onrender.com/address/add`;
       const method = editingAddress ? "PUT" : "POST";
 
       const res = await fetch(url, {
@@ -135,7 +135,7 @@ const UserProfile = () => {
   const handleDeleteAddress = async (id) => {
     try {
       const res = await fetch(
-        `http://localhost:2005/address/delete/${id}`,
+        `https://e-commerce-h9gr.onrender.com/address/delete/${id}`,
         {
           method: "DELETE",
           headers: { "auth-token": token },

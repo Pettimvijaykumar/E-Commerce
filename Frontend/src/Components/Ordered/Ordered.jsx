@@ -9,7 +9,7 @@ const Ordered = () => {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const res = await fetch(`http://localhost:2005/order/${orderId}`, {
+        const res = await fetch(`https://e-commerce-h9gr.onrender.com/order/${orderId}`, {
           headers: { "auth-token": localStorage.getItem("token") || "" },
         });
         const data = await res.json();

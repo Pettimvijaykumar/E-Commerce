@@ -39,7 +39,7 @@ const PaymentForm = ({ address, total }) => {
       }
 
       // 1️⃣ Create order on backend
-      const createRes = await fetch("http://localhost:2005/payment/create-order", {
+      const createRes = await fetch("https://e-commerce-h9gr.onrender.com/payment/create-order", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -71,7 +71,7 @@ const PaymentForm = ({ address, total }) => {
         handler: async (resp) => {
           try {
             // 3️⃣ Verify and save order in backend
-            const verifyRes = await fetch("http://localhost:2005/payment/verify-and-save", {
+            const verifyRes = await fetch("https://e-commerce-h9gr.onrender.com/payment/verify-and-save", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",

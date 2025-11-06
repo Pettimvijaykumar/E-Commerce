@@ -19,7 +19,7 @@ const DescriptionBox = ({ productId }) => {
       if (!token) return;
 
       try {
-        const res = await axios.get("http://localhost:2005/getuser", {
+        const res = await axios.get("https://e-commerce-h9gr.onrender.com/getuser", {
           headers: { "auth-token": token },
         });
         setUser(res.data);
@@ -40,7 +40,7 @@ const DescriptionBox = ({ productId }) => {
       setLoading(true);
       try {
         const res = await axios.get(
-          `http://localhost:2005/product/${Number(productId)}/reviews`
+          `https://e-commerce-h9gr.onrender.com/product/${Number(productId)}/reviews`
         );
         if (res.data.success) {
           setReviews(res.data.reviews || []);
@@ -67,7 +67,7 @@ const DescriptionBox = ({ productId }) => {
     try {
       const token = localStorage.getItem("token");
       const res = await axios.post(
-        `http://localhost:2005/product/${Number(productId)}/review`,
+        `https://e-commerce-h9gr.onrender.com/product/${Number(productId)}/review`,
         { rating: newRating, comment: newReview },
         { headers: { "auth-token": token } }
       );

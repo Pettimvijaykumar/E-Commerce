@@ -7,7 +7,7 @@ const NewCollections = () => {
 
   // fetch data from backend
   useEffect(() => {
-    fetch("http://localhost:2005/newcollections")
+    fetch("https://e-commerce-h9gr.onrender.com/newcollections")
       .then((res) => res.json())
       .then((data) => setNewCollection(data))
       .catch((err) => console.error("Error fetching new collections:", err));
